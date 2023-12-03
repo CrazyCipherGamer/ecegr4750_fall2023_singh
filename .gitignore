@@ -1,3 +1,6 @@
+# Ignore processed data
 *.pt
+# Ignore CSV file
 *.csv
+# Ignore all images
 *.jpg
