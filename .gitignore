@@ -1,6 +1,6 @@
 # Ignore processed data
-*.pt
+**.pt
 # Ignore CSV file
-*.csv
+**.csv
 # Ignore all images
-*.jpg
+**.jpg
