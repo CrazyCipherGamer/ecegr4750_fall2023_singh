@@ -9,4 +9,4 @@ torch==2.1.1
 torchvision==0.16.1
 tqdm==4.66.1
 nltk==3.8.1
-transformers==2.8.0
+Pillow==10.1.0
