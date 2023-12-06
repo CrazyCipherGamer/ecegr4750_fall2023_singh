@@ -18,8 +18,12 @@ class CNNRegression(nn.Module):
         self.fc1 = nn.Linear(in_features=32 * 4 * 4, out_features=1)
 
     def forward(self, x):
-        x = self.relu(self.pool(self.conv1(x)))  # Applying ReLU after the first convolution and pooling
-        x = self.relu(self.pool(self.conv2(x)))  # Applying ReLU after the second convolution and pooling
-        x = torch.flatten(x, start_dim=1)  # Flatten the output for the fully connected layer
+        x = self.conv1(x)
+        x = self.relu(x)
+        x = self.pool(x)
+        x = self.conv2(x)
+        x = self.relu(x)
+        x = self.pool(x) 
+        x = torch.reshape(x, (x.shape(0), -1))  # Reshape the convolutional output for the fully connected layer
         x = self.fc1(x)
         return x
