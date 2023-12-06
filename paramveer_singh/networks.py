@@ -24,6 +24,6 @@ class CNNRegression(nn.Module):
         x = self.conv2(x)
         x = self.relu(x)
         x = self.pool(x) 
-        x = torch.reshape(x, (x.shape(0), -1))  # Reshape the convolutional output for the fully connected layer
+        x = torch.reshape(x, (x.size(0), -1))  # Reshape the convolutional output for the fully connected layer
         x = self.fc1(x)
         return x
