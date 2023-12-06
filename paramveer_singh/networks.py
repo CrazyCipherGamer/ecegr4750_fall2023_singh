@@ -66,7 +66,7 @@ class MultimodalNetwork(nn.Module):
         x = self.linear2(x)
         x = self.relu(x)
 
-        final = torch.cat((x_image, x))
+        final = torch.cat((x_image, x), dim=1)
         final = self.fc2(final)
         
         return final
