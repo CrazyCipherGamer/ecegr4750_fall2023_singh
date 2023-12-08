@@ -51,7 +51,10 @@ def training_loop(train_dataloader, val_dataloader, model, optimizer: torch.opti
         for _ in range(val_dataloader.num_batches_per_epoch):
             # validation data forward pass only
             val_batch = val_dataloader.fetch_batch()
-            yhat = model(val_batch['x_batch'])
+            if is_model_2:
+                yhat = model(val_batch['x_batch'])
+            else:
+                yhat = model(val_batch['x_batch_image'], val_batch['x_batch'])
             val_loss = torch.mean(loss_fn(yhat, val_batch['y_batch']), dim=0)
             losses.append(val_loss.detach().numpy())
         # epoch-level logging for validation though usually makes the most sense
