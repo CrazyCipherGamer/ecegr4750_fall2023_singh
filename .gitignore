@@ -6,3 +6,5 @@
 **.jpg
 # Ignore .venv
 .venv/
+# Ignore pycache
+paramveer_singh/__pycache__/
