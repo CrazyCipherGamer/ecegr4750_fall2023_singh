@@ -3,6 +3,7 @@ import pandas as pd
 from PIL import Image
 import torch
 import tqdm
+import matplotlib.pyplot as plt
 
 # define function to standardize numerical features of dataframe
 def standardize_numeric(series: pd.Series, use_log: bool = False) -> pd.Series:
@@ -56,3 +57,14 @@ def training_loop(train_dataloader, val_dataloader, model, optimizer: torch.opti
         # epoch-level logging for validation though usually makes the most sense
         val_losses.append(np.mean(losses))
     return train_losses, val_losses
+
+# define function to plot training and validation losses
+def plot_losses(train_losses, val_losses, epochs):
+    plt.figure(0, figsize = (12,6))
+    plt.title('Loss per iteration')
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    plt.plot(train_losses)
+    plt.plot(np.linspace(0,len(train_losses),epochs), val_losses)
+    plt.legend(["Training loss","Validation loss"])
+    print('Final validation loss:',val_losses[-1])
