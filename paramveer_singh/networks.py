@@ -4,10 +4,10 @@ import torch.nn as nn
 
 # the following code was produced by ChatGPT where minor modifications are made to kernel size and stride
 class CNNRegression(nn.Module):
-    def __init__(self):
+    def __init__(self, hidden_channels: int=16, out_channels: int=32):
         super(CNNRegression, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=2, stride=2)
-        self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=2, stride=2)
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=hidden_channels, kernel_size=2, stride=2)
+        self.conv2 = nn.Conv2d(in_channels=hidden_channels, out_channels=out_channels, kernel_size=2, stride=2)
         self.pool = nn.MaxPool2d(kernel_size=2)
         self.relu = nn.ReLU()  # Adding ReLU activation
 
@@ -15,7 +15,7 @@ class CNNRegression(nn.Module):
         # an initial image of size 64 x 64 is halved in size each time it passes through a convolution or maxpool layer
         # Since there are 4 of these halving layers, the final size of the image is 64 / 2^4 or 4 x 4
         # 32 is multiplied by 4 x 4 to get the appropriate size for the linear layer as there were 32 channels at the end.
-        self.fc1 = nn.Linear(in_features=32 * 4 * 4, out_features=1)
+        self.fc1 = nn.Linear(in_features=out_channels * 4 * 4, out_features=1)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -30,24 +30,24 @@ class CNNRegression(nn.Module):
 
 
 class MultimodalNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, hidden_channels: int=16, out_channels: int=32, hidden_features: int=16):
         super(MultimodalNetwork, self).__init__()
         # define layers for the CNN
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=2, stride=2)
-        self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=2, stride=2)
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=hidden_channels, kernel_size=2, stride=2)
+        self.conv2 = nn.Conv2d(in_channels=hidden_channels, out_channels=out_channels, kernel_size=2, stride=2)
         self.pool = nn.MaxPool2d(kernel_size=2)
         self.relu = nn.ReLU()  # Adding ReLU activation
 
         # define layers for the CSV data as a linear network
-        self.linear1 = nn.Linear(in_features=5, out_features=16)
-        self.linear2 = nn.Linear(in_features=16, out_features=16)
+        self.linear1 = nn.Linear(in_features=5, out_features=hidden_features)
+        self.linear2 = nn.Linear(in_features=hidden_features, out_features=hidden_features)
 
         # Because of the way that the image shape changes over the course of the convolution and maxpooling
         # an initial image of size 64 x 64 is halved in size each time it passes through a convolution or maxpool layer
         # Since there are 4 of these halving layers, the final size of the image is 64 / 2^4 or 4 x 4
         # 32 is multiplied by 4 x 4 to get the appropriate size for the linear layer as there were 32 channels at the end.
-        self.fc1 = nn.Linear(in_features=32 * 4 * 4, out_features=30)
-        self.fc2 = nn.Linear(in_features=46, out_features=1)
+        self.fc1 = nn.Linear(in_features=out_channels * 4 * 4, out_features=30)
+        self.fc2 = nn.Linear(in_features=30 + hidden_features, out_features=1)
 
 
 
