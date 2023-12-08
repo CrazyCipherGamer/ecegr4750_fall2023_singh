@@ -1,13 +1,14 @@
 import torch
 import math
 import utils
+import pandas as pd
 
 class ImageDataloader():
     """
     Wraps a dataset and enables fetching of one batch at a time
     """
-    def __init__(self, x: str, y: torch.Tensor, batch_size: int = 1, randomize: bool = False):
-        self.x = x
+    def __init__(self, x: pd.Series, y: torch.Tensor, batch_size: int = 1, randomize: bool = False):
+        self.x = x.values
         self.y = y
         self.batch_size = batch_size
         self.randomize = randomize
@@ -65,7 +66,7 @@ class ImageDataloader():
             self.generate_iter()
 
         batch['x_batch'] = utils.process_images(batch['x_batch'])
-        
+
         return batch
 
 class MultimodalDataloader():
