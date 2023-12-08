@@ -73,9 +73,9 @@ class MultimodalDataloader():
     """
     Wraps a dataset and enables fetching of one batch at a time
     """
-    def __init__(self, x: torch.Tensor, images: torch.Tensor, y: torch.Tensor, batch_size: int = 1, randomize: bool = False):
+    def __init__(self, x: torch.Tensor, images: pd.Series, y: torch.Tensor, batch_size: int = 1, randomize: bool = False):
         self.x = x
-        self.images = images
+        self.images = images.values
         self.y = y
         self.batch_size = batch_size
         self.randomize = randomize
@@ -133,4 +133,7 @@ class MultimodalDataloader():
         if batch['batch_idx'] == self.num_batches_per_epoch - 1:
             # generate a fresh iter
             self.generate_iter()
+
+        batch['x_batch_image'] = utils.process_images(batch['x_batch_image'])
+        
         return batch
