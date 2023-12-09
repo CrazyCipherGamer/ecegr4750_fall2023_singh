@@ -70,4 +70,19 @@ def plot_losses(train_losses, val_losses, epochs):
     plt.plot(train_losses)
     plt.plot(np.linspace(0,len(train_losses),epochs), val_losses)
     plt.legend(["Training loss","Validation loss"])
-    print('Final validation loss:',val_losses[-1])
+    print('Epochs used: ', epochs)
+    print('Final validation loss:',val_losses[-1], '\nNote that this is MSE loss.')
+    print('The RMSE loss is ', np.sqrt(val_losses[-1]))
+
+# define function to return model predictions that can be used to print loss
+def run_inference(test_dataloader, model, is_model_2: bool = True) -> np.ndarray:
+    y_preds = []
+    for i in range(test_dataloader.num_batches_per_epoch):
+        test_batch = test_dataloader.fetch_batch()
+        if is_model_2:
+            yhat = model(test_batch['x_batch']).detach().numpy()
+        else:
+            yhat = model(test_batch['x_batch_image'], test_batch['x_batch']).detach().numpy()
+        y_preds.append(yhat)
+    y_preds = np.vstack(y_preds)
+    return y_preds
