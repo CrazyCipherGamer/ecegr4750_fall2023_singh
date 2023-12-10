@@ -77,7 +77,7 @@ def plot_losses(train_losses, val_losses, epochs):
 # define function to return model predictions that can be used to print loss
 def run_inference(test_dataloader, model, is_model_2: bool = True) -> np.ndarray:
     y_preds = []
-    for i in range(test_dataloader.num_batches_per_epoch):
+    for _ in range(test_dataloader.num_batches_per_epoch):
         test_batch = test_dataloader.fetch_batch()
         if is_model_2:
             yhat = model(test_batch['x_batch']).detach().numpy()
