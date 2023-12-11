@@ -3,12 +3,13 @@ import math
 import utils
 import pandas as pd
 
+# This dataloader is adapeted from CustomDataloader defined in the class lectures
 class ImageDataloader():
     """
     Wraps a dataset and enables fetching of one batch at a time
     """
     def __init__(self, x: pd.Series, y: torch.Tensor, batch_size: int = 1, randomize: bool = False):
-        self.x = x.values
+        self.x = x.values   # this is necessary to process the pd.Series into something usable
         self.y = y
         self.batch_size = batch_size
         self.randomize = randomize
@@ -65,17 +66,21 @@ class ImageDataloader():
             # generate a fresh iter
             self.generate_iter()
 
+        # Before returning the batch, the images are processed.
+        # This ensures that the images are only featurized when needed
+        # This reduces memory used when training
         batch['x_batch'] = utils.process_images(batch['x_batch'])
 
         return batch
 
+# This dataloader is also adapted from the CustomDataloader defined in the class lectures
 class MultimodalDataloader():
     """
     Wraps a dataset and enables fetching of one batch at a time
     """
     def __init__(self, x: torch.Tensor, images: pd.Series, y: torch.Tensor, batch_size: int = 1, randomize: bool = False):
         self.x = x
-        self.images = images.values
+        self.images = images.values # This is necessary to parse the pd.Series into something usable
         self.y = y
         self.batch_size = batch_size
         self.randomize = randomize
@@ -134,6 +139,7 @@ class MultimodalDataloader():
             # generate a fresh iter
             self.generate_iter()
 
+        # This is similar to the ImageDataloader
         batch['x_batch_image'] = utils.process_images(batch['x_batch_image'])
         
         return batch
