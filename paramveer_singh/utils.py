@@ -26,6 +26,7 @@ def process_images(image_filenames: np.ndarray) -> torch.Tensor:
     return torch.Tensor(np.asarray(images))
 
 # define training loop function for model 2 and model 3
+# adapted from class lectures
 def training_loop(train_dataloader, val_dataloader, model, optimizer: torch.optim, epochs: int, loss_fn, train_losses, val_losses, is_model_2: bool=True):
     for _ in tqdm.tqdm(range(epochs)):
         losses = []
@@ -33,6 +34,7 @@ def training_loop(train_dataloader, val_dataloader, model, optimizer: torch.opti
             # training data forward pass
             optimizer.zero_grad()
             train_batch = train_dataloader.fetch_batch()
+            # the parameter allows to switch between the appropriate format for training model 2 or 3
             if is_model_2:
                 yhat = model(train_batch['x_batch'])
             else:
@@ -51,6 +53,7 @@ def training_loop(train_dataloader, val_dataloader, model, optimizer: torch.opti
         for _ in range(val_dataloader.num_batches_per_epoch):
             # validation data forward pass only
             val_batch = val_dataloader.fetch_batch()
+            # the parameter allows for the proper format to be used
             if is_model_2:
                 yhat = model(val_batch['x_batch'])
             else:
@@ -61,7 +64,7 @@ def training_loop(train_dataloader, val_dataloader, model, optimizer: torch.opti
         val_losses.append(np.mean(losses))
     return train_losses, val_losses
 
-# define function to plot training and validation losses
+# define function to plot training and validation losses as well as number of epochs and MSE and RMSE scores
 def plot_losses(train_losses, val_losses, epochs):
     plt.figure(0, figsize = (12,6))
     plt.title('Loss per iteration')
@@ -79,6 +82,7 @@ def run_inference(test_dataloader, model, is_model_2: bool = True) -> np.ndarray
     y_preds = []
     for _ in range(test_dataloader.num_batches_per_epoch):
         test_batch = test_dataloader.fetch_batch()
+        # Parameter allows for proper format to call the model
         if is_model_2:
             yhat = model(test_batch['x_batch']).detach().numpy()
         else:
